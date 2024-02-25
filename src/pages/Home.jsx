@@ -1,18 +1,19 @@
-import { HiPlusCircle } from "react-icons/hi"
+import { useState } from "react"
+import { useSelector } from "react-redux";
+import { getTotalListQuantity } from "../service/todosSlice"
+
 import Container from "../ui/Container"
 import Heading from "../ui/Heading"
 import ThemeBtn from "../ui/ThemeBtn"
-import { useState } from "react"
 import TodoForm from "../ui/TodoForm"
 import TodoList from "../ui/TodoList"
 import Progress from "../ui/Progress"
 import ClearBtn from "../ui/ClearBtn"
-import useGetAllTodos from "../services/useGetAllTodos"
-import Spinner from "../ui/Spinner"
 import EmptyList from "../ui/EmptyList"
+import { HiPlusCircle } from "react-icons/hi"
 
 function Home() {
-  const {isLoading, todos} = useGetAllTodos();
+  const todosQuantity = useSelector(getTotalListQuantity);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   function handleOpenForm() {
@@ -22,8 +23,6 @@ function Home() {
   function handleCloseForm() {
     setIsFormOpen(false);
   }
-
-  if (isLoading) return <Spinner />
 
   return (
     <div className={`home w-full h-full relative pb-5`}>
@@ -43,7 +42,7 @@ function Home() {
           </span>
         </button>
         <Progress />
-        {todos?.length > 0 ?
+        {todosQuantity > 0 ?
           <>
             <TodoList />
             <ClearBtn />

@@ -1,22 +1,21 @@
 import { useRef } from "react";
+import { useDispatch } from "react-redux";
 import useOutsideClose from "../hooks/useOutsideClose";
-import useToggleStatus from "../services/useToggleStatus";
-import useDeleteTodo from "../services/useDeleteTodo";
+import { deleteTodo, toggleTodoStatus } from "../service/todosSlice";
 
 function OptionsMenu({todo, close, handleOpenForm}) {
-  const {toggleStatus} = useToggleStatus();
-  const {deleteTodo} = useDeleteTodo();
+  const dispatch = useDispatch();
   const menuRef = useRef();
   const {id, done} = todo;
 
   useOutsideClose(menuRef, close, true);
 
   function handleToggleStatus() {
-    toggleStatus({id, done: !done})
+    dispatch(toggleTodoStatus({id, done: !done}))
   }
 
   function handleDeleteTodo() {
-    deleteTodo(id);
+    dispatch(deleteTodo(id));
   }
 
   return (

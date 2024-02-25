@@ -1,9 +1,10 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { HiTrash } from "react-icons/hi"
-import useClearList from "../services/useClearList";
+import { clearList } from "../service/todosSlice";
 
 function ClearBtn() {
-  const {clearList} = useClearList();
+  const dispatch = useDispatch();
   const [isClearing, setIsClearing] = useState(false);
   const [, setConfirmClearing] = useState(false);
   const [, setCancelClearing] = useState(false);
@@ -15,7 +16,7 @@ function ClearBtn() {
   }
 
   function handleConfirmClear() {
-    clearList();
+    dispatch(clearList());
     setConfirmClearing(true);
     setIsClearing(false);
   }

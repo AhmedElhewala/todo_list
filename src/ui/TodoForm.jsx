@@ -1,22 +1,21 @@
 import { useRef, useState } from "react";
-import useAddTodo from "../services/useAddTodo";
-import useUpdateTodo from "../services/useUpdateTodo"
+import { useDispatch } from "react-redux";
 import FormRowItem from "./FormRowItem";
 import Modal from "./Modal";
 import useModalEffects from "../hooks/useModalEffects"
 import { HiOutlineX } from "react-icons/hi";
 import { isVaildDeadline } from "../utilities/helpers";
 import Spinner from "./Spinner";
+import { addTodo, updateTodo } from "../service/todosSlice";
 
 function TodoForm({todo, close, isOpen}) {
+  const dispatch = useDispatch();
   const [title, setTitle] = useState(todo?.title || "");
   const [note, setNote] = useState(todo?.note || "");
   const [deadline, setDeadline] = useState(todo?.deadline || "");
   const [titleError, setTitleError] = useState("");
   const [deadlineError, setDeadlineError] = useState("");
   const formRef = useRef();
-  const {addTodo} = useAddTodo();
-  const {updateTodo} = useUpdateTodo();
   const [isFormLoading, setIsFormLoading] = useState(false);
 
   useModalEffects(formRef, isOpen, close);
@@ -44,23 +43,13 @@ function TodoForm({todo, close, isOpen}) {
       return;
     }
 
-    addTodo(
-      {title, note, deadline, createdAt, done: false},
-      {onSettled: () => {
-        close();
-        setIsFormLoading(false);
-      }}
-    );
+    const id = Number(Math.random() * 1000).toFixed();
+
+    dispatch(addTodo({id, title, note, deadline, createdAt, done: false}));
   }
 
   function handleUpdateTodo() {
-    updateTodo(
-      {id: todo.id, title, note, deadline, createdAt: todo.createdAt, done: todo.done},
-      {onSettled: () => {
-        close();
-        setIsFormLoading(true);
-      }}
-    );
+    dispatch(updateTodo({id: todo.id, title, note, deadline, createdAt: todo.createdAt, done: todo.done}));
   }
 
   function handleSubmit(e) {
@@ -77,6 +66,9 @@ function TodoForm({todo, close, isOpen}) {
     } else {
       handleAddTodo();
     }
+    
+    close();
+    setIsFormLoading(false);
   }
   
   return (

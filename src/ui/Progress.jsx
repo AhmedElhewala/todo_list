@@ -1,23 +1,8 @@
-import useGetAllTodos from "../services/useGetAllTodos";
+import { useSelector } from "react-redux";
+import { getProgressValue } from "../service/todosSlice";
 
 function Progress() {
-  const {todos} = useGetAllTodos();
-  let doneTasks = 0;
-  let progressValue = 0;
-
-  function calcDoneTasks(coppiedTodos) {
-    if (!Array.isArray(coppiedTodos)) {
-      return 0; 
-    }
-    return coppiedTodos?.reduce((count, todo) => {
-      return todo.done ? count + 1 : count
-    }, 0);
-  }
-
-  if (todos) {
-    doneTasks = calcDoneTasks(todos);
-    progressValue = Number((doneTasks / todos.length) * 100).toFixed();
-  }
+  const progressValue = useSelector(getProgressValue);
 
   return (progressValue > 0 ?
     <div
